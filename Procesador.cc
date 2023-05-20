@@ -16,20 +16,21 @@ void Procesador::agregar_proceso_activo(Proceso& proceso) {
     
     // cout << "llego" << endl;
 
-    // map<int,set<int>>::iterator it_bucle = size_pos_memoria.begin();
-    // cout << "no llego" << endl;
+    //  map<int,set<int>>::iterator it_bucle = size_pos_memoria.begin();
+    // // cout << "no llego" << endl;
 
-    // while (it_bucle != size_pos_memoria.end()) {
-    //     cout << "tamaño:" << it_bucle->first << endl;
-    //     cout << "pos:";
-    //     set<int>::iterator it_set_bucle = it_bucle->second.begin();
-    //     while (it_set_bucle != it_bucle->second.end()) {
-    //         cout << *it_set_bucle << ' ';
-    //         ++it_set_bucle;
-    //     }
-    //     ++it_bucle;
-    //     cout << endl;
-    // }
+    // cout << "antes app:" << endl;
+    //  while (it_bucle != size_pos_memoria.end()) {
+    //      cout << "tamaño:" << it_bucle->first << endl;
+    //      cout << "pos:";
+    //      set<int>::iterator it_set_bucle = it_bucle->second.begin();
+    //      while (it_set_bucle != it_bucle->second.end()) {
+    //          cout << *it_set_bucle << ' ';
+    //          ++it_set_bucle;
+    //      }
+    //      ++it_bucle;
+    //      cout << endl;
+    //  }
     //busca el agujero mas pequeño que quepa y el iterador queda apuntando a él
     // cout << "que memoria:" << memoria_restante << endl;
     //si no hay nada
@@ -65,6 +66,21 @@ void Procesador::agregar_proceso_activo(Proceso& proceso) {
             actualizar_memoria_restante_sub(proceso);
         }
     }
+    // it_bucle = size_pos_memoria.begin();
+    // // // // cout << "no llego" << endl;
+    //     cout << "despues app:" << endl;
+
+    //   while (it_bucle != size_pos_memoria.end()) {
+    //       cout << "tamaño:" << it_bucle->first << endl;
+    //       cout << "pos:";
+    //       set<int>::iterator it_set_bucle = it_bucle->second.begin();
+    //       while (it_set_bucle != it_bucle->second.end()) {
+    //           cout << *it_set_bucle << ' ';
+    //           ++it_set_bucle;
+    //       }
+    //       ++it_bucle;
+    //       cout << endl;
+    //   }
 }
 
 void Procesador::elimina_proceso_activo_directo(const int& identificador_proceso) {
@@ -72,20 +88,20 @@ void Procesador::elimina_proceso_activo_directo(const int& identificador_proceso
     map<int, int>::iterator it_id_memoria;
     map<int,set<int>>::iterator it_huecos;
 
-    // map<int,set<int>>::iterator it_bucle = size_pos_memoria.begin();
-    // // cout << "no llego" << endl;
+    //   map<int,set<int>>::iterator it_bucle = size_pos_memoria.begin();
+    // // // // cout << "no llego" << endl;
 
-    // while (it_bucle != size_pos_memoria.end()) {
-    //     cout << "tamaño:" << it_bucle->first << endl;
-    //     cout << "pos:";
-    //     set<int>::iterator it_set_bucle = it_bucle->second.begin();
-    //     while (it_set_bucle != it_bucle->second.end()) {
-    //         cout << *it_set_bucle << ' ';
-    //         ++it_set_bucle;
-    //     }
-    //     ++it_bucle;
-    //     cout << endl;
-    // }
+    //   while (it_bucle != size_pos_memoria.end()) {
+    //       cout << "tamaño:" << it_bucle->first << endl;
+    //       cout << "pos:";
+    //       set<int>::iterator it_set_bucle = it_bucle->second.begin();
+    //       while (it_set_bucle != it_bucle->second.end()) {
+    //           cout << *it_set_bucle << ' ';
+    //           ++it_set_bucle;
+    //       }
+    //       ++it_bucle;
+    //       cout << endl;
+    //   }
 
 
     //tiene mas de un proceso
@@ -285,6 +301,9 @@ void Procesador::elimina_proceso_activo_directo(const int& identificador_proceso
                 it_movil = --it_pos_proceso;
                 ++it_pos_proceso;
                 bool agujero_antes = false;
+                
+                // cout << it_pos_proceso->second.identificador_del_proceso() << endl;
+                // cout << it_movil->second.identificador_del_proceso() << endl;
 
                 //borrar agujero
                 if((it_pos_proceso->first - (it_movil->first + it_movil->second.memoria_ocupada())) > 0) agujero_antes = true;
@@ -310,6 +329,7 @@ void Procesador::elimina_proceso_activo_directo(const int& identificador_proceso
                 }
                 else {
                     //borrar el del final
+                    // cout << "size:" << size << endl;
                     it_huecos = size_pos_memoria.find(size - (it_pos_proceso->first + it_pos_proceso->second.memoria_ocupada()));
                     if(it_huecos->second.size() == 1)  {
                         size_pos_memoria.erase(it_huecos);
@@ -319,8 +339,8 @@ void Procesador::elimina_proceso_activo_directo(const int& identificador_proceso
                         it_huecos->second.erase(it_set);
                     }
                 }
-
-                size_nou_forat = (it_pos_proceso->first - (it_movil->first + it_movil->second.memoria_ocupada())) + it_pos_proceso->second.memoria_ocupada();
+                size_nou_forat = size - it_pos_proceso->first;
+                // cout << "size nou forat: " << size_nou_forat << endl;
                 it_huecos = size_pos_memoria.find(size_nou_forat);
                 if(size_nou_forat > 0) {
                     nou_pos = it_movil->first + it_movil->second.memoria_ocupada();
@@ -400,22 +420,29 @@ void Procesador::elimina_proceso_activo_directo(const int& identificador_proceso
         // cout << "solo uno" << endl;
         it_id_memoria = id_pos_memoria.find(identificador_proceso); //encontrar la posicion
         it_pos_proceso = pos_proceso.find(it_id_memoria->second); //encontrar el proceso
-        it_huecos = size_pos_memoria.find(size);
 
         size_pos_memoria.clear();
         actualizar_memoria_restante_add(it_pos_proceso->second.memoria_ocupada());
-        if(it_huecos != size_pos_memoria.end()) {
-            it_huecos->second.insert(0);
-        }
-        else {
-            // cout << "no existe" << endl;
-            set<int> nou_set;
-            nou_set.insert(0);
-            size_pos_memoria[size] = nou_set;
-        }
+        set<int> nou_set;
+        nou_set.insert(0);
+        size_pos_memoria[size] = nou_set;
+
         pos_proceso.erase(it_pos_proceso);
         id_pos_memoria.erase(it_id_memoria);
     }
+
+    // it_bucle = size_pos_memoria.begin();
+    //  while (it_bucle != size_pos_memoria.end()) {
+    //      cout << "tamaño:" << it_bucle->first << endl;
+    //      cout << "pos:";
+    //      set<int>::iterator it_set_bucle = it_bucle->second.begin();
+    //      while (it_set_bucle != it_bucle->second.end()) {
+    //          cout << *it_set_bucle << ' ';
+    //          ++it_set_bucle;
+    //      }
+    //      ++it_bucle;
+    //      cout << endl;
+    //  }
 }
 
 void Procesador::elimina_proceso_activo_tiempo(const int& tiempo_actual) {
@@ -425,8 +452,6 @@ void Procesador::elimina_proceso_activo_tiempo(const int& tiempo_actual) {
         Proceso &p = it->second;
         ++it;
         p.modificar_tiempo_restante(tiempo_actual);
-        cout << p.tiempo_ejecucion_restante() << endl;
-        cout << p.identificador_del_proceso() << endl;
         if (p.tiempo_ejecucion_restante() <= 0) {
             elimina_proceso_activo_directo(p.identificador_del_proceso());
         }
@@ -474,12 +499,16 @@ void Procesador::compactar() {
         if (it_pos_proceso->first != 0) {
             pos_proceso[0] = it_pos_proceso->second;
             id_pos_memoria[it_pos_proceso->second.identificador_del_proceso()] = 0;
+            // cout << it_pos_proceso->second.identificador_del_proceso() << endl;
             it_pos_proceso = pos_proceso.erase(it_pos_proceso);
+            --it_pos_proceso;
+            // cout << it_pos_proceso->second.identificador_del_proceso() << endl;
+
         }
-        
+        nou_pos = it_pos_proceso->second.memoria_ocupada();
         if (pos_proceso.size() > 1){
-            nou_pos = it_pos_proceso->second.memoria_ocupada();
             ++it_pos_proceso;
+            // cout << it_pos_proceso->second.identificador_del_proceso() << endl;
         }
 
         //casos siguientes
@@ -498,6 +527,7 @@ void Procesador::compactar() {
         }
         size_pos_memoria.clear();
         set<int> nou_set;
+        // cout << "nou pos: " << nou_pos << endl;
         nou_set.insert(nou_pos);
         size_pos_memoria[size - nou_pos] = nou_set;
     }

@@ -105,17 +105,16 @@ string Cluster::agujero_ajustado(Proceso& proceso) {
         BinTree<string> arbol(cola.front());
         map <string, Procesador>::iterator it2 = procesadores.find(arbol.value());
         int agujero = it2->second.revisar_agujeros(proceso.memoria_ocupada());
-
        
 
         if(not arbol.left().empty()) cola.push(arbol.left());
         if(not arbol.right().empty()) cola.push(arbol.right());
         
-        
         if(agujero != -1 and not it2->second.contiene_proceso(proceso.identificador_del_proceso())) {
             if(primera or agujero < agujero_min) {
                 id_procesador_temp = it2->first;
                 agujero_min = agujero;
+                it = it2;
                 primera = false;
             }
             else if((agujero == agujero_min) and (it2->second.cantidad_memoria_libre() > it->second.cantidad_memoria_libre())) {
